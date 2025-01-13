@@ -5,6 +5,8 @@ import { Repository } from "typeorm";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { Project } from "./entities/project.entity";
+import ProjectStatusEnum from "./enums/projectStatus.enum";
+import { log } from "console";
 
 @Injectable()
 export class ProjectsService {
@@ -22,8 +24,13 @@ export class ProjectsService {
     }
   }
 
-  async findAll(): Promise<Project[]> {
+  findAll(status?: ProjectStatusEnum): Promise<Project[]> {
     const query = this.projectRepository.createQueryBuilder("projects");
+
+    if (status === ProjectStatusEnum.Enable || status === ProjectStatusEnum.Disable) {
+      query.where("status = :status", { status });
+    }
+
     return query.getMany();
   }
 
