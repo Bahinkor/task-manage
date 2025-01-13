@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+// eslint-disable-next-line import/no-cycle
+import { Project } from "src/projects/entities/project.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import TaskStatusEnum from "../enums/taskStatus.enum";
 
@@ -16,4 +18,8 @@ export class Task {
 
   @Column({ type: "enum", enum: TaskStatusEnum, default: TaskStatusEnum.Set })
   status: TaskStatusEnum;
+
+  // eslint-disable-next-line perfectionist/sort-classes
+  @ManyToOne(() => Project, (project) => project.tasks)
+  project: Project;
 }
