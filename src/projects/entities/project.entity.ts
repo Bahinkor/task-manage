@@ -1,15 +1,16 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-import StatusEnum from "../enums/status.enum";
+import ProjectStatusEnum from "../enums/projectStatus.enum";
 
 @Entity({ name: "projects" })
 export class Project {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.Enable })
-  status: StatusEnum;
-
   @Column()
   title: string;
+
+  // eslint-disable-next-line perfectionist/sort-classes
+  @Column({ type: "enum", enum: ProjectStatusEnum, default: ProjectStatusEnum.Enable })
+  status: ProjectStatusEnum;
 }
