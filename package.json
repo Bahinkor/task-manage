@@ -1,7 +1,7 @@
 {
   "name": "task-manage",
   "version": "1.0.0",
-  "description": "",
+  "description": "A small project with Nest JS, which is my first experience with this technology, and this project is going to be a personal task manager.",
   "author": "github.com/bahinkor",
   "private": false,
   "license": "MIT",
