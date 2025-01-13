@@ -1,12 +1,25 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
+import { Project } from "./entities/project.entity";
 
 @Injectable()
 export class ProjectsService {
-  create(createProjectDto: CreateProjectDto) {
-    return "This action adds a new project";
+  constructor(
+    @InjectRepository(Project)
+    private readonly projectRepository: Repository<Project>,
+  ) {}
+
+  async create(createProjectDto: CreateProjectDto): Promise<Project> {
+    try {
+      const newProject = this.projectRepository.create(createProjectDto);
+      return await this.projectRepository.save(newProject);
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
   }
 
   findAll() {
