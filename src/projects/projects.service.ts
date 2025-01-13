@@ -22,8 +22,9 @@ export class ProjectsService {
     }
   }
 
-  findAll() {
-    return `This action returns all projects`;
+  async findAll(): Promise<Project[]> {
+    const query = this.projectRepository.createQueryBuilder("projects");
+    return query.getMany();
   }
 
   findOne(id: number) {
