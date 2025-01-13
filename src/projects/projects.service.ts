@@ -24,12 +24,15 @@ export class ProjectsService {
     }
   }
 
-  findAll(status?: ProjectStatusEnum): Promise<Project[]> {
+  findAll(status?: ProjectStatusEnum, limit: number = 10, page: number = 1): Promise<Project[]> {
     const query = this.projectRepository.createQueryBuilder("projects");
 
     if (status === ProjectStatusEnum.Enable || status === ProjectStatusEnum.Disable) {
       query.where("status = :status", { status });
     }
+
+    // pagination
+    query.skip((page - 1) * limit).take(limit);
 
     return query.getMany();
   }
