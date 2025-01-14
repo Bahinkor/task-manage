@@ -44,8 +44,10 @@ export class ProjectsService {
     return project;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`;
+  async remove(id: number): Promise<void> {
+    const deletedProject = await this.projectRepository.delete({ id });
+
+    if (!deletedProject.affected) throw new NotFoundException(`project ${id} is not found.`);
   }
 
   async update(id: number, updateProjectDto: UpdateProjectDto): Promise<object> {
@@ -54,9 +56,9 @@ export class ProjectsService {
 
       if (!project) throw new NotFoundException(`project ${id} is not found.`);
 
-      const updateProject = await this.projectRepository.update({ id }, updateProjectDto);
+      const updatedProject = await this.projectRepository.update({ id }, updateProjectDto);
 
-      return updateProject;
+      return updatedProject;
     } catch (e) {
       throw new BadRequestException(e.message);
     }
