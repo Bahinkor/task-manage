@@ -11,8 +11,14 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
-  create(@Body() createProjectDto: CreateProjectDto): object {
-    return this.projectsService.create(createProjectDto);
+  async create(@Body() createProjectDto: CreateProjectDto, @Res() res: Response): object {
+    const createdProject = await this.projectsService.create(createProjectDto);
+
+    return res.status(HttpStatus.CREATED).json({
+      data: createdProject,
+      statusCode: HttpStatus.CREATED,
+      message: "Project created successfully.",
+    });
   }
 
   @Get()
@@ -32,17 +38,33 @@ export class ProjectsController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.projectsService.findOne(+id);
+  async findOne(@Param("id") id: string, @Res() res: Response) {
+    const project = await this.projectsService.findOne(+id);
+
+    return res.status(HttpStatus.OK).json({
+      data: project,
+      statusCode: HttpStatus.OK,
+      message: "Project fetched successfully.",
+    });
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.projectsService.remove(+id);
+  async remove(@Param("id") id: string, @Res() res: Response) {
+    await this.projectsService.remove(+id);
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: "Project deleted successfully.",
+    });
   }
 
   @Put(":id")
-  update(@Param("id") id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectsService.update(+id, updateProjectDto);
+  async update(@Param("id") id: string, @Body() updateProjectDto: UpdateProjectDto, @Res() res: Response) {
+    await this.projectsService.update(+id, updateProjectDto);
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: "Project updated successfully.",
+    });
   }
 }
