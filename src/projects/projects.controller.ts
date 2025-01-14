@@ -49,7 +49,7 @@ export class ProjectsController {
   }
 
   @Delete(":id")
-  async remove(@Param("id") id: string, @Res() res: Response) {
+  async remove(@Param("id") id: string, @Res() res: Response): Promise<object> {
     await this.projectsService.remove(+id);
 
     return res.status(HttpStatus.OK).json({
