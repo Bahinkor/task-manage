@@ -11,7 +11,7 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
-  async create(@Body() createProjectDto: CreateProjectDto, @Res() res: Response): object {
+  async create(@Body() createProjectDto: CreateProjectDto, @Res() res: Response): Promise<object> {
     const createdProject = await this.projectsService.create(createProjectDto);
 
     return res.status(HttpStatus.CREATED).json({
