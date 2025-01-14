@@ -1,3 +1,7 @@
 import { init } from "@fullstacksjs/eslint-config";
 
-export default init(); // enable eslint configuration
+export default init({
+  rules: {
+    "perfectionist/sort-classes": "off",
+  },
+}); // enable eslint configuration

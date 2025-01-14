@@ -1,7 +1,13 @@
-import type ProjectStatusEnum from "../enums/projectStatus.enum";
+import { IsEnum, IsNotEmpty, IsString, MinLength } from "class-validator";
+
+import ProjectStatusEnum from "../enums/projectStatus.enum";
 
 export class CreateProjectDto {
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
   title: string;
-  // eslint-disable-next-line perfectionist/sort-classes
+
+  @IsEnum(ProjectStatusEnum)
   status: ProjectStatusEnum;
 }
