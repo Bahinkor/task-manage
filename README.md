@@ -32,6 +32,15 @@
 $ yarn install
 ```
 
+## Database setup
+
+```bash
+database=postgresql
+database_name=task_manage
+post=5432
+host=localhost
+```
+
 ## Compile and run the project
 
 ```bash
