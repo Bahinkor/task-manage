@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 import TaskStatusEnum from "../enums/taskStatus.enum";
 
@@ -16,4 +16,8 @@ export class CreateTaskDto {
   @IsEnum(TaskStatusEnum)
   @IsOptional()
   status: TaskStatusEnum;
+
+  @IsNumber()
+  @IsNotEmpty()
+  projectId: number;
 }
