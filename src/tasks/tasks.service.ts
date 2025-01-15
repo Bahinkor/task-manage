@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Project } from "src/projects/entities/project.entity";
 import { Repository } from "typeorm";
@@ -46,15 +46,34 @@ export class TasksService {
     return query.getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async findOne(id: number): Promise<Task> {
+    const task = await this.taskRepository.findOne({ where: { id }, relations: ["project"] });
+
+    if (!task) throw new NotFoundException(`Task ${id} is not found.`);
+
+    return task;
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async update(id: number, updateTaskDto: UpdateTaskDto): Promise<object> {
+    try {
+      const { projectId, ...taskData } = updateTaskDto;
+      const task = await this.taskRepository.findOneBy({ id });
+
+      if (!task) throw new NotFoundException(`Task ${id} is not found.`);
+
+      const project = await this.projectRepository.findOneByOrFail({ id: projectId });
+
+      const updatedTask = await this.taskRepository.update({ id }, { ...taskData, project });
+
+      return updatedTask;
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(id: number): Promise<void> {
+    const deletedTask = await this.taskRepository.delete({ id });
+
+    if (!deletedTask.affected) throw new NotFoundException(`Task ${id} is not found.`);
   }
 }

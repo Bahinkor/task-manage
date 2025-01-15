@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, Res } from "@nestjs/common";
 import { Response } from "express";
 
 import { CreateTaskDto } from "./dto/create-task.dto";
@@ -38,17 +38,33 @@ export class TasksController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.tasksService.findOne(+id);
+  async findOne(@Param("id") id: string, @Res() res: Response): Promise<object> {
+    const task = await this.tasksService.findOne(+id);
+
+    return res.status(HttpStatus.OK).json({
+      data: task,
+      statusCode: HttpStatus.OK,
+      message: "Task fetched successfully",
+    });
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(+id, updateTaskDto);
+  @Put(":id")
+  async update(@Param("id") id: string, @Body() updateTaskDto: UpdateTaskDto, @Res() res: Response): Promise<object> {
+    await this.tasksService.update(+id, updateTaskDto);
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: "Task updated successfully",
+    });
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.tasksService.remove(+id);
+  async remove(@Param("id") id: string, @Res() res: Response): Promise<object> {
+    await this.tasksService.remove(+id);
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: "Task deleted successfully",
+    });
   }
 }
