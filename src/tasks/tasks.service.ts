@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { CreateTaskDto } from "./dto/create-task.dto";
 import { UpdateTaskDto } from "./dto/update-task.dto";
 import { Task } from "./entities/task.entity";
+import TaskStatusEnum from "./enums/taskStatus.enum";
 
 @Injectable()
 export class TasksService {
@@ -27,8 +28,22 @@ export class TasksService {
     }
   }
 
-  findAll() {
-    return `This action returns all tasks`;
+  findAll(status?: TaskStatusEnum, limit: number = 10, page: number = 1): Promise<Task[]> {
+    const query = this.taskRepository.createQueryBuilder("tasks").leftJoinAndSelect("tasks.project", "project");
+
+    if (
+      status === TaskStatusEnum.Set ||
+      status === TaskStatusEnum.Doing ||
+      status === TaskStatusEnum.Done ||
+      status === TaskStatusEnum.Cancel
+    ) {
+      query.where("tasks.status = :status", { status });
+    }
+
+    // pagination
+    query.skip((page - 1) * limit).take(limit);
+
+    return query.getMany();
   }
 
   findOne(id: number) {
