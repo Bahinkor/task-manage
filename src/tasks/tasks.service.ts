@@ -28,7 +28,7 @@ export class TasksService {
     }
   }
 
-  findAll(status?: TaskStatusEnum, limit: number = 10, page: number = 1): Promise<Task[]> {
+  findAll(status?: TaskStatusEnum, projectId?: number, limit: number = 10, page: number = 1): Promise<Task[]> {
     const query = this.taskRepository.createQueryBuilder("tasks").leftJoinAndSelect("tasks.project", "project");
 
     if (
@@ -39,6 +39,8 @@ export class TasksService {
     ) {
       query.where("tasks.status = :status", { status });
     }
+
+    if (projectId) query.where("project.id = :projectId", { projectId });
 
     // pagination
     query.skip((page - 1) * limit).take(limit);

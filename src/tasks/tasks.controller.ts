@@ -25,10 +25,11 @@ export class TasksController {
   async findAll(
     @Res() res: Response,
     @Query("status") status?: TaskStatusEnum,
+    @Query("project") projectId?: number,
     @Query("limit") limit: number = 10,
     @Query("page") page: number = 1,
   ): Promise<object> {
-    const tasks = await this.tasksService.findAll(status, limit, page);
+    const tasks = await this.tasksService.findAll(status, projectId, limit, page);
 
     return res.status(HttpStatus.OK).json({
       data: tasks,
