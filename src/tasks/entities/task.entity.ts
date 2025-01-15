@@ -1,3 +1,4 @@
+import { IsString, MinLength } from "class-validator";
 // eslint-disable-next-line import/no-cycle
 import { Project } from "src/projects/entities/project.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
@@ -10,16 +11,16 @@ export class Task {
   id: number;
 
   @Column()
+  @IsString()
+  @MinLength(1)
   title: string;
 
-  // eslint-disable-next-line perfectionist/sort-classes
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @Column({ type: "enum", enum: TaskStatusEnum, default: TaskStatusEnum.Set })
   status: TaskStatusEnum;
 
-  // eslint-disable-next-line perfectionist/sort-classes
   @ManyToOne(() => Project, (project) => project.tasks)
   project: Project;
 }
